@@ -1,3 +1,63 @@
-img {
-  max-width: 100%;
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Saira+Stencil+One&display=swap');
+
+
+:root {
+  --main-font: "Pixelify Sans", sans-serif;
+  --secondary-font: "Saira Stencil One", sans-serif;
 }
+
+body {
+  font-family: var(--main-font);
+}
+
+.pokemon-list-item {
+  position: relative;
+}
+
+.pokemon-list-item img {
+  max-width: 100%;
+  border: 1px solid rgb(203, 203, 203);
+}
+
+.caught-tag {
+  z-index: 1;
+  position: absolute;
+  width: 104%;
+  height: 104%;
+  top: -2%;
+  left: -2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(0, 128, 0, .8);
+}
+
+
+/*************/
+/* TEXT/FONT */
+/*************/
+
+h1 {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+h1::first-letter {
+  font-size: 3rem;
+}
+
+h2 {
+  padding: .5em;
+}
+
+.caught-tag p {
+  font-size: 3.25rem;
+  color: white;
+  font-family: var(--secondary-font);
+  background-color: black;
+
+}
+
+
+
