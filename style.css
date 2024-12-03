@@ -90,6 +90,7 @@ h1::first-letter {
 
 h2 {
   padding: .5em;
+  text-transform: capitalize;
 }
 
 .caught-tag p {
@@ -99,6 +100,10 @@ h2 {
   background-color: black;
 
 }
+
+/*********/
+/* MEDIA */
+/*********/
 
 @media screen and (max-width: 575px) {
   #pokemon-spotlight>.modal-body {

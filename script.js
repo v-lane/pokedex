@@ -2,26 +2,30 @@
 // VARIABLES //
 ///////////////
 
-const $pokemon_list = document.querySelector('#pokemon-list');
-const $modal = document.querySelector('#pokemon-spotlight');
-const $modal_close = document.querySelector('#modal-close');
-const $release_button = document.querySelector('#release-pokemon');
-const $catch_button = document.querySelector('#catch-pokemon');
-const $load_button = document.querySelector('#load-more');
+const $pokemon_list = document.getElementById('pokemon-list');
+const $modal = document.getElementById('pokemon-spotlight');
+const $modal_close = document.getElementById('modal-close');
+const $release_button = document.getElementById('release-pokemon');
+const $catch_button = document.getElementById('catch-pokemon');
+const $load_button = document.getElementById('load-more');
+
+let next_url = '';
 
 /////////////////////
 // ASYNC FUNCTIONS //
 /////////////////////
 
-// Get intial pokemon list data
-async function getPokemonList() {
+// Get pokemon list data and create html elements.
+// default url pulls first 20 pokemon
+async function getPokemonList(url = 'https://pokeapi.co/api/v2/pokemon/') {
   try {
-    const response = await fetch('https://pokeapi.co/api/v2/pokemon/');
+    const response = await fetch(url);
     const data = await response.json();
 
-    const element = createPokemonList(data.results)
-    $pokemon_list.prepend(element)
+    const element = createPokemonList(data.results);
+    $pokemon_list.prepend(element);
 
+    next_url = data.next;
   } catch (error) {
     console.error('Error: ', error);
   }
@@ -59,58 +63,49 @@ function parseUrl(url) {
 // Create single pokemon element, given pokemon ID and name
 // Return HTML element
 function createPokemonItem(pokemonID, pokemonName) {
-  const $column = document.createElement('div')
-  $column.className = "col-12 col-sm-6 col-md-4"
-  const $item_container = document.createElement('div')
-  $item_container.className = "pokemon-list-item"
-  $item_container.dataset.pokemon = pokemonID
-  const $caught_tag = document.createElement('div')
-  $caught_tag.className = "caught-tag"
-  $caught_tag.innerHTML = "<p>CAUGHT</p>"
-  const $image = document.createElement('img')
-  $image.setAttribute('src', `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonID}.png`)
-  $image.setAttribute('alt', pokemonName)
-  const $h2 = document.createElement('h2')
-  $h2.className = 'h3'
-  $h2.textContent = pokemonName
+  const $column = document.createElement('div');
+  $column.className = "col-12 col-sm-6 col-md-4";
+  const $item_container = document.createElement('div');
+  $item_container.className = "pokemon-list-item";
+  $item_container.dataset.pokemon = pokemonID;
+  const $caught_tag = document.createElement('div');
+  $caught_tag.className = "caught-tag";
+  $caught_tag.innerHTML = "<p>CAUGHT</p>";
+  const $image = document.createElement('img');
+  $image.setAttribute('src', `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonID}.png`);
+  $image.setAttribute('alt', pokemonName);
+  const $h2 = document.createElement('h2');
+  $h2.className = 'h3';
+  $h2.textContent = pokemonName;
 
-  $item_container.append($caught_tag, $image, $h2)
-  $column.append($item_container)
+  $item_container.append($caught_tag, $image, $h2);
+  $column.append($item_container);
 
-  return $column
+  return $column;
 }
 
 // Given array of data, create many pokemon elements
 // Return HTML element
 function createPokemonList(data) {
-  console.log('data', data)
-  const $row = document.createElement('div')
-  $row.className = "row justify-content-center"
+  let $row;
+
+  if ($pokemon_list.contains(document.querySelector('div'))) {
+    $row = $pokemon_list.firstElementChild;
+  } else {
+    $row = document.createElement('div');
+    $row.className = "row justify-content-center";
+  }
+
   for (const pokemon of data) {
     const id = parseUrl(pokemon.url);
-    console.log('id:', id)
-    const name = pokemon.name
-    console.log('name: ', name)
-    const $pokemonItem = createPokemonItem(id, name)
-    $row.append($pokemonItem)
+    console.log('id:', id);
+    const name = pokemon.name;
+    console.log('name: ', name);
+    const $pokemonItem = createPokemonItem(id, name);
+    $row.append($pokemonItem);
   }
-  return $row
+  return $row;
 }
-
-
-{/*       <div class="row justify-content-center">
-
-  <div class="col-12 col-sm-6 col-md-4">
-<div class="pokemon-list-item" data-pokemon="pokemon-1">
-  <div class="caught-tag">
-    <p>CAUGHT</p>
-  </div>
-  <img
-    src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-    alt="Bulbasaur">
-  <h2 class="h3">Bulbasaur</h2>
-</div>
-</div> */}
 
 
 /////////////////////
@@ -136,9 +131,7 @@ $catch_button.addEventListener('click', () => {
 });
 
 // On click of 'Load More' pokemon button.
-$load_button.addEventListener('click', () => {
-  console.log('LOAD MORE POKEMON');
-});
+$load_button.addEventListener('click', () => getPokemonList(next_url));
 
 
 
