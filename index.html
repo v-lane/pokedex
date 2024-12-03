@@ -42,20 +42,14 @@
 
     <dialog id="pokemon-spotlight" class="d-none" tabindex="-1">
       <header>
-        <h1>Bulbasaur</h1>
+        <h1 id="modal-h1"></h1>
         <button type="button" class="btn-close" id="modal-close"></button>
       </header>
       <div class="modal-body">
         <div class="modal-body-section">
-          <img
-          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-          alt="Bulbasaur">        
+          <img id="modal-img">        
         </div>
-        <div class="modal-body-section">
-          <h2>Types</h2>
-          <p>[types]</p>
-          <h2>Moves</h2>
-          <p>[moves]</p>
+        <div class="modal-body-section" id="modal-body-details">
           <button type="button" class="btn btn-success" id="catch-pokemon">Catch</button>
           <button type="button" class="btn btn-danger d-none" id="release-pokemon">Release</button>
         </div>

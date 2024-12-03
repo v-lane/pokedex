@@ -65,6 +65,13 @@ body {
   flex: 1;
 }
 
+#pokemon-spotlight #modal-body-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+}
+
 #pokemon-spotlight img {
   width: 100%;
 }

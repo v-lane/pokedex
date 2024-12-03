@@ -9,6 +9,7 @@ const $release_button = document.getElementById('release-pokemon');
 const $catch_button = document.getElementById('catch-pokemon');
 const $load_button = document.getElementById('load-more');
 
+
 let next_url = '';
 
 /////////////////////
@@ -31,6 +32,53 @@ async function getPokemonList(url = 'https://pokeapi.co/api/v2/pokemon/') {
   }
 }
 
+// Get single pokemon data and update modal element info
+// given pokemon id
+async function getPokemonData(id) {
+  console.log('pokemon id:', id);
+  try {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+    const data = await response.json();
+
+    updateModal(data);
+  } catch (error) {
+    console.error('Error: ', error);
+  }
+
+
+}
+
+function updateModal(data) {
+  const $h1 = document.getElementById('modal-h1');
+  const $img = document.getElementById('modal-img');
+  const $modal_body = document.getElementById('modal-body-details');
+
+  $h1.textContent = data.name;
+  $img.setAttribute('src', `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.id}.png`);
+  $img.setAttribute('alt', data.name);
+
+  const $h2_types = document.createElement('h2');
+  $h2_types.textContent = 'Types';
+  const $h2_abilities = document.createElement('h2');
+  $h2_abilities.textContent = 'Abilities';
+
+  const $types = document.createElement('p');
+  const types = [];
+  for (const type of data.types) {
+    types.push(type.type.name);
+  }
+  $types.textContent = types.join(', ');
+
+  const $abilities = document.createElement('p');
+  const abilities = [];
+  for (const ability of data.abilities) {
+    abilities.push(ability.ability.name);
+  }
+  $abilities.textContent = abilities.join(', ');
+
+  $modal_body.prepend($h2_types, $types, $h2_abilities, $abilities);
+}
+
 
 //////////////////////
 // HELPER FUNCTIONS //
@@ -40,8 +88,10 @@ async function getPokemonList(url = 'https://pokeapi.co/api/v2/pokemon/') {
 function pokemonListAction(e) {
   if (e.target.closest('.pokemon-list-item')) {
     console.log('GET POKEMON ID FROM ELEMENT - GET DATA - POPULATE MODAL');
-    console.log(e.target.closest('.pokemon-list-item').dataset.pokemon);
-    console.log($modal);
+
+    const id = e.target.closest('.pokemon-list-item').dataset.pokemon;
+    getPokemonData(id);
+
     $modal.showModal();
     $modal.classList.remove('d-none');
   }
@@ -51,6 +101,19 @@ function pokemonListAction(e) {
 function closeModal() {
   $modal.classList.add('d-none');
   $modal.close();
+
+  const $modal_body_details = document.getElementById('modal-body-details')
+  $modal_body_details.innerHTML = '<button type="button" class="btn btn-success" id="catch-pokemon">Catch</button><button type="button" class="btn btn-danger d-none" id="release-pokemon">Release</button>'
+
+  const $modal_img = document.getElementById('modal-img') 
+  $modal_img.removeAttribute('src')
+  $modal_img.removeAttribute('alt')
+
+  const $modal_h1 = document.getElementById('modal-h1')
+  $modal_h1.textContent = ''
+
+
+
   console.log('CHECK IF ANY OTHER MODAL CLEANUP NEEDED');
 }
 
@@ -98,9 +161,7 @@ function createPokemonList(data) {
 
   for (const pokemon of data) {
     const id = parseUrl(pokemon.url);
-    console.log('id:', id);
     const name = pokemon.name;
-    console.log('name: ', name);
     const $pokemonItem = createPokemonItem(id, name);
     $row.append($pokemonItem);
   }
@@ -118,7 +179,7 @@ $pokemon_list.addEventListener('click', pokemonListAction);
 
 
 // On click of modal 'X' close button.
-$modal_close.addEventListener('click', (() => closeModal()));
+$modal_close.addEventListener('click', closeModal);
 
 // On click of modal 'Release' button.
 $release_button.addEventListener('click', () => {
