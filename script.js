@@ -9,7 +9,7 @@ const $release_button = document.getElementById('release-pokemon');
 const $catch_button = document.getElementById('catch-pokemon');
 const $load_button = document.getElementById('load-more');
 
-
+const caught_pokemon = getCaughtPokemon();
 let next_url = '';
 
 /////////////////////
@@ -27,6 +27,8 @@ async function getPokemonList(url = 'https://pokeapi.co/api/v2/pokemon/') {
     $pokemon_list.prepend(element);
 
     next_url = data.next;
+
+    updateCaughtPokemon()
   } catch (error) {
     console.error('Error: ', error);
   }
@@ -35,48 +37,15 @@ async function getPokemonList(url = 'https://pokeapi.co/api/v2/pokemon/') {
 // Get single pokemon data and update modal element info
 // given pokemon id
 async function getPokemonData(id) {
-  console.log('pokemon id:', id);
   try {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     const data = await response.json();
 
     updateModal(data);
+
   } catch (error) {
     console.error('Error: ', error);
   }
-
-
-}
-
-function updateModal(data) {
-  const $h1 = document.getElementById('modal-h1');
-  const $img = document.getElementById('modal-img');
-  const $modal_body = document.getElementById('modal-body-details');
-
-  $h1.textContent = data.name;
-  $img.setAttribute('src', `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.id}.png`);
-  $img.setAttribute('alt', data.name);
-
-  const $h2_types = document.createElement('h2');
-  $h2_types.textContent = 'Types';
-  const $h2_abilities = document.createElement('h2');
-  $h2_abilities.textContent = 'Abilities';
-
-  const $types = document.createElement('p');
-  const types = [];
-  for (const type of data.types) {
-    types.push(type.type.name);
-  }
-  $types.textContent = types.join(', ');
-
-  const $abilities = document.createElement('p');
-  const abilities = [];
-  for (const ability of data.abilities) {
-    abilities.push(ability.ability.name);
-  }
-  $abilities.textContent = abilities.join(', ');
-
-  $modal_body.prepend($h2_types, $types, $h2_abilities, $abilities);
 }
 
 
@@ -87,8 +56,6 @@ function updateModal(data) {
 // If pokemon list item exists, open modal with data for clicked pokemon.
 function pokemonListAction(e) {
   if (e.target.closest('.pokemon-list-item')) {
-    console.log('GET POKEMON ID FROM ELEMENT - GET DATA - POPULATE MODAL');
-
     const id = e.target.closest('.pokemon-list-item').dataset.pokemon;
     getPokemonData(id);
 
@@ -102,19 +69,20 @@ function closeModal() {
   $modal.classList.add('d-none');
   $modal.close();
 
-  const $modal_body_details = document.getElementById('modal-body-details')
-  $modal_body_details.innerHTML = '<button type="button" class="btn btn-success" id="catch-pokemon">Catch</button><button type="button" class="btn btn-danger d-none" id="release-pokemon">Release</button>'
+  const $modal_body_details = document.getElementById('modal-body-details').children;
+  for (let i = 0; i < $modal_body_details.length; i++) {
+    if ($modal_body_details[0].tagName === 'P' || $modal_body_details[0].tagName === 'H2') {
+      $modal_body_details[0].remove();
+      i -= 1;
+    }
+  }
 
-  const $modal_img = document.getElementById('modal-img') 
-  $modal_img.removeAttribute('src')
-  $modal_img.removeAttribute('alt')
+  const $modal_img = document.getElementById('modal-img');
+  $modal_img.removeAttribute('src');
+  $modal_img.removeAttribute('alt');
 
-  const $modal_h1 = document.getElementById('modal-h1')
-  $modal_h1.textContent = ''
-
-
-
-  console.log('CHECK IF ANY OTHER MODAL CLEANUP NEEDED');
+  const $modal_h1 = document.getElementById('modal-h1');
+  $modal_h1.textContent = '';
 }
 
 // parseURL
@@ -132,7 +100,7 @@ function createPokemonItem(pokemonID, pokemonName) {
   $item_container.className = "pokemon-list-item";
   $item_container.dataset.pokemon = pokemonID;
   const $caught_tag = document.createElement('div');
-  $caught_tag.className = "caught-tag";
+  $caught_tag.className = "caught-tag d-none";
   $caught_tag.innerHTML = "<p>CAUGHT</p>";
   const $image = document.createElement('img');
   $image.setAttribute('src', `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonID}.png`);
@@ -168,6 +136,68 @@ function createPokemonList(data) {
   return $row;
 }
 
+// Given pokemon data, update modal
+function updateModal(data) {
+  const $h1 = document.getElementById('modal-h1');
+  const $img = document.getElementById('modal-img');
+  const $modal_body = document.getElementById('modal-body-details');
+
+  $h1.textContent = data.name;
+  $h1.dataset.pokemon = data.id;
+  $img.setAttribute('src', `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.id}.png`);
+  $img.setAttribute('alt', data.name);
+
+  const $h2_types = document.createElement('h2');
+  $h2_types.textContent = 'Types';
+  const $h2_abilities = document.createElement('h2');
+  $h2_abilities.textContent = 'Abilities';
+
+  const $types = document.createElement('p');
+  const types = [];
+  for (const type of data.types) {
+    types.push(type.type.name);
+  }
+  $types.textContent = types.join(', ');
+
+  const $abilities = document.createElement('p');
+  const abilities = [];
+  for (const ability of data.abilities) {
+    abilities.push(ability.ability.name);
+  }
+  $abilities.textContent = abilities.join(', ');
+
+  if (caught_pokemon.includes(`${data.id}`)) {
+    $release_button.classList.remove('d-none')
+    $catch_button.classList.add('d-none')
+  } else {
+    $release_button.classList.add('d-none')
+    $catch_button.classList.remove('d-none')
+  }
+
+  $modal_body.prepend($h2_types, $types, $h2_abilities, $abilities);
+}
+
+// Check localstorage for caught pokemon
+function getCaughtPokemon() {
+  if (localStorage.getItem('caught_pokemon')) {
+    return JSON.parse(localStorage.getItem('caught_pokemon'));
+  } else {
+    return [];
+  }
+}
+
+// check and update pokemon with 'caught' banner
+function updateCaughtPokemon() {
+  const $pokemon_items = document.querySelectorAll('.pokemon-list-item');
+  for (const pokemon of $pokemon_items) {
+    const id = pokemon.dataset.pokemon;
+    if (caught_pokemon.includes(`${id}`)) {
+      const $caught_tag = pokemon.querySelector('.caught-tag');
+      $caught_tag.classList.remove('d-none');
+    }
+  }
+}
+
 
 /////////////////////
 // EVENT LISTENERS //
@@ -187,8 +217,17 @@ $release_button.addEventListener('click', () => {
 });
 
 // On click of modal 'Catch' button.
-$catch_button.addEventListener('click', () => {
+$catch_button.addEventListener('click', (e) => {
   console.log('CATCH POKEMON');
+  localStorage.removeItem('caught_pokemon');
+
+  const pokemon = document.getElementById('modal-h1').dataset.pokemon;
+  caught_pokemon.push(pokemon);
+  localStorage.setItem('caught_pokemon', JSON.stringify(caught_pokemon));
+
+  updateCaughtPokemon()
+
+  closeModal()
 });
 
 // On click of 'Load More' pokemon button.

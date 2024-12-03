@@ -32,8 +32,6 @@ body {
   flex-direction: column;
   justify-content: center;
   background-color: rgba(0, 128, 0, .8);
-
-  display: none;
 }
 
 #pokemon-spotlight {
@@ -105,7 +103,10 @@ h2 {
   color: white;
   font-family: var(--secondary-font);
   background-color: black;
+}
 
+#modal-body-details p {
+  font-size: 1.25rem;
 }
 
 /*********/
