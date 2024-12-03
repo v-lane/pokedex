@@ -16,6 +16,10 @@ body {
   position: relative;
 }
 
+.pokemon-list-item:hover {
+  cursor: pointer
+}
+
 .pokemon-list-item img {
   max-width: 100%;
   border: 1px solid rgb(203, 203, 203);
@@ -74,7 +78,8 @@ body {
   width: 100%;
 }
 
-#pokemon-spotlight .btn-success, .btn-danger {
+#pokemon-spotlight .btn-success,
+.btn-danger {
   width: 100%;
 }
 

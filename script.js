@@ -12,6 +12,7 @@ const $load_button = document.getElementById('load-more');
 const caught_pokemon = getCaughtPokemon();
 let next_url = '';
 
+
 /////////////////////
 // ASYNC FUNCTIONS //
 /////////////////////
@@ -28,7 +29,7 @@ async function getPokemonList(url = 'https://pokeapi.co/api/v2/pokemon/') {
 
     next_url = data.next;
 
-    updateCaughtPokemon()
+    updateCaughtPokemon();
   } catch (error) {
     console.error('Error: ', error);
   }
@@ -167,11 +168,11 @@ function updateModal(data) {
   $abilities.textContent = abilities.join(', ');
 
   if (caught_pokemon.includes(`${data.id}`)) {
-    $release_button.classList.remove('d-none')
-    $catch_button.classList.add('d-none')
+    $release_button.classList.remove('d-none');
+    $catch_button.classList.add('d-none');
   } else {
-    $release_button.classList.add('d-none')
-    $catch_button.classList.remove('d-none')
+    $release_button.classList.add('d-none');
+    $catch_button.classList.remove('d-none');
   }
 
   $modal_body.prepend($h2_types, $types, $h2_abilities, $abilities);
@@ -216,10 +217,10 @@ $modal_close.addEventListener('click', closeModal);
 // On click of modal 'Release' button.
 $release_button.addEventListener('click', () => {
   const id = document.getElementById('modal-h1').dataset.pokemon;
-  caught_pokemon.splice(caught_pokemon.indexOf(`${id}`),1)
+  caught_pokemon.splice(caught_pokemon.indexOf(`${id}`), 1);
   localStorage.setItem('caught_pokemon', JSON.stringify(caught_pokemon));
-  updateCaughtPokemon()
-  closeModal()
+  updateCaughtPokemon();
+  closeModal();
 });
 
 // On click of modal 'Catch' button.
@@ -228,8 +229,8 @@ $catch_button.addEventListener('click', (e) => {
   const id = document.getElementById('modal-h1').dataset.pokemon;
   caught_pokemon.push(id);
   localStorage.setItem('caught_pokemon', JSON.stringify(caught_pokemon));
-  updateCaughtPokemon()
-  closeModal()
+  updateCaughtPokemon();
+  closeModal();
 });
 
 // On click of 'Load More' pokemon button.
