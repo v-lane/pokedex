@@ -19,10 +19,10 @@
     <h1>Pokedex</h1>
 
     <section id="pokemon-list" class="container-fluid">
-      <div class="row">
+      <div class="row justify-content-center">
 
         <div class="col-12 col-sm-6 col-md-4">
-          <div class="pokemon-list-item">
+          <div class="pokemon-list-item" data-pokemon="pokemon-1">
             <div class="caught-tag">
               <p>CAUGHT</p>
             </div>
@@ -34,7 +34,7 @@
         </div>
 
         <div class="col-12 col-sm-6 col-md-4">
-          <div class="pokemon-list-item">
+          <div class="pokemon-list-item" data-pokemon="pokemon-2">
             <div class="caught-tag">
               <p>CAUGHT</p>
             </div>
@@ -46,7 +46,7 @@
         </div>
 
         <div class="col-12 col-sm-6 col-md-4">
-          <div class="pokemon-list-item">
+          <div class="pokemon-list-item" data-pokemon="pokemon-3">
             <div class="caught-tag">
               <p>CAUGHT</p>
             </div>
@@ -57,31 +57,55 @@
           </div>
         </div>
 
-      
-        
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="pokemon-list-item" data-pokemon="pokemon-3">
+            <div class="caught-tag">
+              <p>CAUGHT</p>
+            </div>
+            <img
+              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+              alt="Bulbasaur">
+            <h2 class="h3">Bulbasaur</h2>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="pokemon-list-item" data-pokemon="pokemon-3">
+            <div class="caught-tag">
+              <p>CAUGHT</p>
+            </div>
+            <img
+              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+              alt="Bulbasaur">
+            <h2 class="h3">Bulbasaur</h2>
+          </div>
+        </div>
+
       </div>
-      <button class="btn btn-primary">Load More</button>
+      <button class="btn btn-primary" id="load-more">Load More</button>
     </section>
 
-    <section id="pokemon-spotlight" class="modal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title">[Pokemon Name]</h1>
-            <button type="button" class="btn-close"></button>
-          </div>
-          <div class="modal-body">
-            <img src="" alt="">[IMAGE TAG]</img>
-            <h2>Types</h2>
-            <p>[types]</p>
-            <h2>Moves</h2>
-            <p>[moves]</p>
-            <button type="button" class="btn">Catch</button>
-            <button type="button" class="btn d-none">Release</button>
-          </div>
+    <dialog id="pokemon-spotlight" class="d-none" tabindex="-1">
+      <header>
+        <h1>Bulbasaur</h1>
+        <button type="button" class="btn-close" id="modal-close"></button>
+      </header>
+      <div class="modal-body">
+        <div class="modal-body-section">
+          <img
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+          alt="Bulbasaur">        
+        </div>
+        <div class="modal-body-section">
+          <h2>Types</h2>
+          <p>[types]</p>
+          <h2>Moves</h2>
+          <p>[moves]</p>
+          <button type="button" class="btn btn-success" id="catch-pokemon">Catch</button>
+          <button type="button" class="btn btn-danger d-none" id="release-pokemon">Release</button>
         </div>
       </div>
-    </section>
+    </dialog>
 
   </main>
   <!-- JS -->

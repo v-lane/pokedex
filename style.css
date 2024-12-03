@@ -1,10 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Saira+Stencil+One&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
 :root {
   --main-font: "Pixelify Sans", sans-serif;
   --secondary-font: "Saira Stencil One", sans-serif;
+  --modal-font: "Special Elite", sans-serif;
 }
 
 body {
@@ -31,7 +32,47 @@ body {
   flex-direction: column;
   justify-content: center;
   background-color: rgba(0, 128, 0, .8);
+
+  display: none;
 }
+
+#pokemon-spotlight {
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  min-height: 50vh;
+  overflow: visible;
+  font-family: var(--modal-font);
+  padding: 2rem;
+}
+
+#pokemon-spotlight>header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+#pokemon-spotlight #modal-close {
+  font-size: 1.5rem;
+}
+
+#pokemon-spotlight>.modal-body {
+  display: flex;
+  justify-content: space-between;
+}
+
+#pokemon-spotlight .modal-body-section {
+  flex: 1;
+}
+
+#pokemon-spotlight img {
+  width: 100%;
+}
+
+#pokemon-spotlight .btn-success, .btn-danger {
+  width: 100%;
+}
+
 
 
 /*************/
@@ -59,5 +100,8 @@ h2 {
 
 }
 
-
-
+@media screen and (max-width: 575px) {
+  #pokemon-spotlight>.modal-body {
+    flex-direction: column;
+  }
+}
