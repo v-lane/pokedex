@@ -191,9 +191,11 @@ function updateCaughtPokemon() {
   const $pokemon_items = document.querySelectorAll('.pokemon-list-item');
   for (const pokemon of $pokemon_items) {
     const id = pokemon.dataset.pokemon;
+    const $caught_tag = pokemon.querySelector('.caught-tag');
     if (caught_pokemon.includes(`${id}`)) {
-      const $caught_tag = pokemon.querySelector('.caught-tag');
       $caught_tag.classList.remove('d-none');
+    } else {
+      $caught_tag.classList.add('d-none');
     }
   }
 }
@@ -213,20 +215,20 @@ $modal_close.addEventListener('click', closeModal);
 
 // On click of modal 'Release' button.
 $release_button.addEventListener('click', () => {
-  console.log('RELEASE POKEMON');
+  const id = document.getElementById('modal-h1').dataset.pokemon;
+  caught_pokemon.splice(caught_pokemon.indexOf(`${id}`),1)
+  localStorage.setItem('caught_pokemon', JSON.stringify(caught_pokemon));
+  updateCaughtPokemon()
+  closeModal()
 });
 
 // On click of modal 'Catch' button.
 $catch_button.addEventListener('click', (e) => {
-  console.log('CATCH POKEMON');
   localStorage.removeItem('caught_pokemon');
-
-  const pokemon = document.getElementById('modal-h1').dataset.pokemon;
-  caught_pokemon.push(pokemon);
+  const id = document.getElementById('modal-h1').dataset.pokemon;
+  caught_pokemon.push(id);
   localStorage.setItem('caught_pokemon', JSON.stringify(caught_pokemon));
-
   updateCaughtPokemon()
-
   closeModal()
 });
 
